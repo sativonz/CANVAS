@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Átomo estilo React</title>
+  <style>
+    canvas {
+      display: block;
+      margin: auto;
+      background-color: transparent;
+    }
+  </style>
+</head>
+<body style="background-color: black;">
+  <canvas id="atomCanvas" width="300" height="300"></canvas>
+  <script>
+    const canvas = document.getElementById('atomCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+
+    let electron1X = centerX + 100;
+    let electron1Y = centerY;
+    let electron2X = centerX - 50;
+    let electron2Y = centerY - 87;
+    let electron3X = centerX - 50;
+    let electron3Y = centerY + 87;
+
+    // Dibujar el núcleo
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI);
+    ctx.fillStyle = 'white';
+    ctx.fill();
+    ctx.closePath();
+
+    // Dibujar las órbitas
+    function drawEllipse(ctx, x, y, a, b, angle) {
+      ctx.beginPath();
+      ctx.ellipse(x, y, a, b, angle, 0, 2 * Math.PI);
+      ctx.strokeStyle = 'white';
+      ctx.stroke();
+      ctx.closePath();
+    }
+
+    drawEllipse(ctx, centerX, centerY, 100, 60, 0);
+    drawEllipse(ctx, centerX, centerY, 100, 60, (2 * Math.PI) / 3);
+    drawEllipse(ctx, centerX, centerY, 100, 60, (4 * Math.PI) / 3);
+
+    // Dibujar los electrones
+    function drawElectron(x, y) {
+      ctx.beginPath();
+      ctx.arc(x, y, 10, 0, 2 * Math.PI);
+      ctx.fillStyle = 'white';
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    function updateElectronPosition(angle, distanceFromCenterX, distanceFromCenterY, orbitInclination) {
+  const newX = centerX + Math.cos(angle) * distanceFromCenterX * Math.cos(orbitInclination) - Math.sin(angle) * distanceFromCenterY * Math.sin(orbitInclination);
+  const newY = centerY + Math.cos(angle) * distanceFromCenterX * Math.sin(orbitInclination) + Math.sin(angle) * distanceFromCenterY * Math.cos(orbitInclination);
+  return { x: newX, y: newY };
+}
+
+
+
+
+
+let electron1Angle = 0;
+let electron2Angle = (2 * Math.PI) / 3;
+let electron3Angle = (4 * Math.PI) / 3;
+let angleOffset = 0.01;
+
+function updateElectronPositions() {
+  electron1Angle += angleOffset;
+  electron2Angle += angleOffset;
+  electron3Angle += angleOffset;
+
+  const newElectron1 = updateElectronPosition(electron1Angle, 100, 60, 0);
+  electron1X = newElectron1.x;
+  electron1Y = newElectron1.y;
+
+  const newElectron2 = updateElectronPosition(electron2Angle, 100, 60, (2 * Math.PI) / 3);
+  electron2X = newElectron2.x;
+  electron2Y = newElectron2.y;
+
+  const newElectron3 = updateElectronPosition(electron3Angle, 100, 60, (4 * Math.PI) / 3);
+  electron3X = newElectron3.x;
+  electron3Y = newElectron3.y;
+}
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", (e) => {
+  setInterval(() => {
+    // Borrar el canvas en cada iteración
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Dibujar el núcleo
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI);
+    ctx.fillStyle = "white";
+    ctx.fill();
+    ctx.closePath();
+
+    // Dibujar las órbitas
+    drawEllipse(ctx, centerX, centerY, 100, 60, 0);
+    drawEllipse(ctx, centerX, centerY, 100, 60, (2 * Math.PI) / 3);
+    drawEllipse(ctx, centerX, centerY, 100, 60, (4 * Math.PI) / 3);
+
+    // Dibujar los electrones
+    drawElectron(electron1X, electron1Y);
+    drawElectron(electron2X, electron2Y);
+    drawElectron(electron3X, electron3Y);
+
+    // Actualizar la posición de los electrones después de renderizarlos
+    updateElectronPositions();
+  }, 20); // Actualizar la posición de los electrones cada 50 milisegundos
+});
+
+
+   
+  </script>
+</body>
+</html>
