@@ -7,7 +7,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <title>Document</title>
 </head>
 
@@ -22,7 +21,7 @@
     <img src="img-maped.png" usemap="#mapa">
     <canvas id="canvas" style="position:absolute; top:0; left:0;"></canvas>
     <map name="mapa">
-      <area data-active="true" 
+      <area data-active="true" data-blocked="false"
         data-title="INDUCTION HEATING FOR DRILLING TUBES" 
         data-index="1" 
         data-img="induction-drilling.png" 
@@ -31,7 +30,7 @@
         coords="392,159,23"
         shape="circle">
 
-      <area data-active="true" 
+      <area data-active="true" data-blocked="false" 
         data-title="INDUCTION HEATING FOR MOORING CHAINS" 
         data-index="2"
         data-img="induction-mooring.png" 
@@ -40,7 +39,7 @@
         coords="291,261,25"
         shape="circle">
 
-      <area data-active="true" 
+      <area data-active="true" data-blocked="false" 
         data-title="INDUCTION HEATING FOR WELDED TUBE" 
         data-index="3"
         data-img="induction-welded.png" 
@@ -49,7 +48,7 @@
         coords="629,134,24"
         shape="circle">
 
-      <area data-active="true" 
+      <area data-active="true" data-blocked="false" 
         data-title="INDUCTION HEATING FOR SEAMLESS TUBE" 
         data-index="4"
         data-img="induction-seamless.png" 
@@ -58,7 +57,7 @@
         coords="460,278,26"
         shape="circle">
 
-      <area data-active="true" 
+      <area data-active="true" data-blocked="false" 
         data-title="INDUCTION HEATING FOR SUCKER RODS" 
         data-index="5"
         data-img="induction-welded.png" 
@@ -71,193 +70,205 @@
   </div>
 
 
-  <script>
-    let container = document.querySelector(".container"),
-      imgElement = document.querySelector("img"),
-      areas = document.querySelectorAll("map area").length;
 
-    function getAreaCenterCoords(area) {
-      let coordsStrArray = area.coords.split(",");
-      let coordsIntArray = coordsStrArray.map((coord) => parseInt(coord));
-      let imgRect = imgElement.getBoundingClientRect();
-
-      return {
-        x: coordsIntArray[0] + imgRect.left,
-        y: coordsIntArray[1] + imgRect.top,
-      };
-    }
-
-    function clickOnAreasSequentially() {
-      let areas = document.querySelectorAll("area[data-index]");
-      let index = 0;
-
-      function clickNextArea() {
-        if (index < areas.length) {
-          let area = areas[index];
-
-          let simulatedClickEvent = new MouseEvent("click", {
-            bubbles: true,
-            cancelable: true,
-            view: window,
-          });
-
-          area.dispatchEvent(simulatedClickEvent, true);
-
-          index++;
-          setTimeout(clickNextArea, 500);
-        }
-      }
-
-      clickNextArea();
-    }
-
-    window.addEventListener("load", clickOnAreasSequentially);
-
-    let ultimaCajaTop = 25,
-      lineas = [],
-      cajas = {},
-      ultimaCajaTopIzquierda = 25,
-      ultimaCajaTopDerecha = 25;
-    container = document.querySelector(".container");
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="js/jquery.rwdImageMaps.min.js"></script>
+<script>
+    $(document).ready(function(e) {
+      $('img[usemap]').rwdImageMaps();
+  });
 
 
-    function createCloseButton(caja, area, index) {
-      let closeButton = document.createElement('button');
-      closeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg>`;
-      closeButton.classList.add("close");
-      closeButton.onclick = function () {
-        // Ocultar la caja
-        caja.style.display = "none";
-        // Eliminar la línea
-        cajas[index].linea = null;
-        // Redibujar las líneas
-        redrawLines();
-        // Reestablecer la propiedad active del área
-        area.dataset.active = 'true';
-      };
-      caja.appendChild(closeButton);
-    }
+  let container = document.querySelector(".container"),
+    imgElement = document.querySelector("img"),
+    areas = document.querySelectorAll("map area").length;
 
-    function redrawLines() {
-      let ctx = document.getElementById('canvas').getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.strokeStyle = '#F99602';
-      ctx.lineWidth = 2;
+  function getAreaCenterCoords(area) {
+    let coordsStrArray = area.coords.split(",");
+    let coordsIntArray = coordsStrArray.map((coord) => parseInt(coord));
+    let imgRect = imgElement.getBoundingClientRect();
 
-      for (let index in cajas) {
-        if (cajas[index].linea) {
-          ctx.beginPath();
-          ctx.moveTo(cajas[index].linea.inicioX, cajas[index].linea.inicioY);
-          ctx.lineTo(cajas[index].linea.finalX, cajas[index].linea.finalY);
-          ctx.stroke();
-        }
+    return {
+      x: coordsIntArray[0] + imgRect.left,
+      y: coordsIntArray[1] + imgRect.top,
+    };
+  }
+
+  function clickOnAreasSequentially() {
+    let areas = document.querySelectorAll("area[data-index]");
+    let index = 0;
+
+    function clickNextArea() {
+      if (index < areas.length) {
+        let area = areas[index];
+
+        let simulatedClickEvent = new MouseEvent("click", {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+        });
+
+        area.dispatchEvent(simulatedClickEvent, true);
+
+        index++;
+        setTimeout(clickNextArea, 500);
       }
     }
 
-    function mostrarLineaYCaja(event, area, simulated = false) {
-      if (area.dataset.active === "false") return;
-      area.dataset.active = 'false';
+    clickNextArea();
+  }
 
-      let containerRect = container.getBoundingClientRect();
+  window.addEventListener("load", clickOnAreasSequentially);
 
-      let offsetX, offsetY;
-      if (simulated) {
-        let coords = getAreaCenterCoords(area);
-        offsetX = coords.x - containerRect.left;
-        offsetY = coords.y - containerRect.top;
+  let ultimaCajaTop = 25,
+    lineas = [],
+    cajas = {},
+    ultimaCajaTopIzquierda = 25,
+    ultimaCajaTopDerecha = 25;
+  container = document.querySelector(".container");
+
+
+  function createCloseButton(caja, area, index) {
+    let closeButton = document.createElement('button');
+    closeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg>`;
+    closeButton.classList.add("close");
+    closeButton.onclick = function () {
+      //Ocultar el contenido de la caja
+      closeButton.parentElement.classList.remove("open");
+      
+      // Ocultar la caja
+      //caja.style.display = "none";
+      // Eliminar la línea
+      //cajas[index].linea = null;
+      // Redibujar las líneas
+      //redrawLines();
+      // Reestablecer la propiedad active del área
+      area.dataset.blocked = "true";
+      area.dataset.active = 'true';
+    };
+    caja.appendChild(closeButton);
+  }
+
+  function redrawLines() {
+    let ctx = document.getElementById('canvas').getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = '#F99602';
+    ctx.lineWidth = 2;
+
+    for (let index in cajas) {
+      if (cajas[index].linea) {
+        ctx.beginPath();
+        ctx.moveTo(cajas[index].linea.inicioX, cajas[index].linea.inicioY);
+        ctx.lineTo(cajas[index].linea.finalX, cajas[index].linea.finalY);
+        ctx.stroke();
+      }
+    }
+  }
+
+  function mostrarLineaYCaja(event, area, simulated = false) {
+    if (area.dataset.active === "false" || area.dataset.blocked === "true") return;
+    area.dataset.active = 'false';
+
+    let containerRect = container.getBoundingClientRect();
+
+    let offsetX, offsetY;
+    if (simulated) {
+      let coords = getAreaCenterCoords(area);
+      offsetX = coords.x - containerRect.left;
+      offsetY = coords.y - containerRect.top;
+    } else {
+      offsetX = event.clientX - containerRect.left;
+      offsetY = event.clientY - containerRect.top;
+    }
+
+    let box = container.querySelector(".pos-" + area.dataset.index);
+
+    if (box) {
+      box.style.display = "block";
+      area.dataset.active = 'true';
+
+      let finalX;
+      if (event.clientX < container.getBoundingClientRect().left + container.offsetWidth / 2) {
+        finalX = 0;
       } else {
-        offsetX = event.clientX - containerRect.left;
-        offsetY = event.clientY - containerRect.top;
+        finalX = container.offsetWidth - 200;
       }
 
-      let box = container.querySelector(".pos-" + area.dataset.index);
+      // Actualizar la información de la línea en cajas
+      cajas[area.dataset.index].linea = {
+        inicioX: offsetX,
+        inicioY: offsetY,
+        finalX: finalX,
+        finalY: cajas[area.dataset.index].elemento.offsetTop,
+      };
+      redrawLines();
+    } else {
+      let caja = document.createElement('div');
+      caja.innerHTML = `
+      <span class='title'>${area.dataset.title}</span>
+        <div class='content'>
+          <img src='${area.dataset.img}' />
+          <div class='applications'>
+            <span>${area.dataset.applications}</span>
+          </div>
+        </div>`;
+      caja.style.position = 'absolute';
+      caja.classList.add("pos-" + area.dataset.index, "box");
+      caja.setAttribute("data-index", area.dataset.index);
+      let canvas = document.getElementById('canvas');
+      canvas.width = container.offsetWidth;
+      canvas.height = container.offsetHeight;
 
-      if (box) {
-        box.style.display = "block";
-        area.dataset.active = 'true';
-
-        let finalX;
-        if (event.clientX < container.getBoundingClientRect().left + container.offsetWidth / 2) {
-          finalX = 0;
-        } else {
-          finalX = container.offsetWidth - 200;
-        }
-
-        // Actualizar la información de la línea en cajas
-        cajas[area.dataset.index].linea = {
-          inicioX: offsetX,
-          inicioY: offsetY,
-          finalX: finalX,
-          finalY: cajas[area.dataset.index].elemento.offsetTop,
-        };
-        redrawLines();
+      let finalX;
+      let usarTopIzquierda;
+      if (offsetX < container.offsetWidth / 2.8) {
+        finalX = 0;
+        usarTopIzquierda = true;
       } else {
-        let caja = document.createElement('div');
-        caja.innerHTML = `
-        <span class='title'>${area.dataset.title}</span>
-          <div class='content'>
-            <img src='${area.dataset.img}' />
-            <div class='applications'>
-              <span>${area.dataset.applications}</span>
-            </div>
-          </div>`;
-        caja.style.position = 'absolute';
-        caja.classList.add("pos-" + area.dataset.index, "box");
-        caja.setAttribute("data-index", area.dataset.index);
-        let canvas = document.getElementById('canvas');
-        canvas.width = container.offsetWidth;
-        canvas.height = container.offsetHeight;
+        finalX = container.offsetWidth - 320;
+        usarTopIzquierda = false;
+      }
 
-        let finalX;
-        let usarTopIzquierda;
-        if (offsetX < container.offsetWidth / 2.5) {
-          finalX = 0;
-          usarTopIzquierda = true;
-        } else {
-          finalX = container.offsetWidth - 200;
-          usarTopIzquierda = false;
-        }
+      let topActual = usarTopIzquierda ? ultimaCajaTopIzquierda : ultimaCajaTopDerecha;
 
-        let topActual = usarTopIzquierda ? ultimaCajaTopIzquierda : ultimaCajaTopDerecha;
+      cajas[area.dataset.index] = {
+        elemento: caja,
+        linea: { inicioX: offsetX, inicioY: offsetY, finalX: finalX, finalY: topActual },
+      };
 
-        cajas[area.dataset.index] = {
-          elemento: caja,
-          linea: { inicioX: offsetX, inicioY: offsetY, finalX: finalX, finalY: topActual },
-        };
+      createCloseButton(caja, area, area.dataset.index);
+      redrawLines();
 
-        createCloseButton(caja, area, area.dataset.index);
-        redrawLines();
+      topActual -= 100
 
-        topActual -= 100
+      caja.style.left = finalX + 'px';
+      caja.style.top = topActual + 'px';
 
-        caja.style.left = finalX + 'px';
-        caja.style.top = topActual + 'px';
+      container.appendChild(caja);
 
-        container.appendChild(caja);
-
-        if (usarTopIzquierda) {
-          ultimaCajaTopIzquierda += caja.offsetHeight + 70;
-        } else {
-          ultimaCajaTopDerecha += caja.offsetHeight + 70;
-        }
+      if (usarTopIzquierda) {
+        ultimaCajaTopIzquierda += caja.offsetHeight + 70;
+      } else {
+        ultimaCajaTopDerecha += caja.offsetHeight + 70;
       }
     }
+  }
 
-    setTimeout(()=>{
-      let areaToShow = document.querySelectorAll("[data-active='false']");
-      let boxes = document.querySelectorAll(".box");
+  setTimeout(()=>{
+    let areaToShow = document.querySelectorAll("[data-active='false']");
+    let boxes = document.querySelectorAll(".box");
 
-      areaToShow.forEach(area => {
-        area.addEventListener("click", e => {
-          let index = area.dataset.index;
+    areaToShow.forEach(area => {
+      area.addEventListener("click", e => {
+        let index = area.dataset.index;
 
-          boxes[index - 1].classList.add("open");
+        boxes[index - 1].classList.add("open");
 
-        })
-      });
-    
-    }, 500 * areas)
-    
+      })
+    });
+  
+  }, 500 * areas)
+  
   </script>
 </body>
 
