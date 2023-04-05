@@ -74,8 +74,8 @@
         onclick="mostrarLineaYCaja(event, this, true)" title="INDUCTION HEATING FOR SUCKER RODS" 
         coords="454,338,22" 
         shape="circle">
-
     </map>
+    <div class="container-mobile"></div>
   </div>
 
 
@@ -298,6 +298,50 @@ if (window.matchMedia("(min-width: 768px)").matches) {
       }
     })
   }
+} else {
+  const d = document;
+  let infoAreas = d.querySelectorAll("map area"),
+    $fragment = d.createDocumentFragment(),
+    $container = d.querySelector(".container-mobile"),
+    $template = d.createElement('div');
+
+  $template.className = 'box';
+
+  infoAreas.forEach(area => {
+    $template.innerHTML = `
+      <div class='wrap-title'>
+        <span class='index'>${area.dataset.index}</span>
+        <span class='title'>${area.dataset.title}</span>
+      </div>
+      <div class='content'>
+          <img src='${area.dataset.img}'>
+          <div class='applications'>
+            <span>${area.dataset.applications}</span>
+          </div>
+      </div>
+    `;
+    let $clone = d.importNode($template, true);
+    $fragment.appendChild($clone);
+  });
+
+  $container.appendChild($fragment);
+
+  let boxes = $container.querySelectorAll(".box");
+
+  boxes.forEach(box => {
+    box.addEventListener("click", e => {
+      if(box.classList.contains("open")){
+        box.classList.remove("open")
+      } else {
+        box.classList.add("open")
+      }
+    })
+  });
+
+
+
+
+
 }
     
   </script>

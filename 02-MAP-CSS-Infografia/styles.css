@@ -31,6 +31,7 @@ area[data-active="true"] {
     bottom: 0;
     left: 0;
     right: 0;
+    padding: 0 20px;
 }
 
 .container img {
@@ -74,7 +75,7 @@ area[data-active="true"] {
 
 /**** BOX *****/
 
-.box {
+.container > .box {
     width: 100%;
     max-width: 280px;
     background: transparent;
@@ -82,11 +83,12 @@ area[data-active="true"] {
     min-height: 125px;
 }
 
-.box.open {
+.container > .box.open {
     background: #ccc;
 }
 
-.box .title {
+.container > .box .title,
+.container-mobile .box .title {
     font-size: 17px;
     font-weight: bold;
     width: calc(100% - 25px);
@@ -98,7 +100,16 @@ area[data-active="true"] {
     display: block;
 }
 
-.box .content {
+.container > .box .title {
+    width: calc(100% - 25px);
+}
+
+.container-mobile .title {
+    width: 100%;
+    margin: 0!important;
+}
+
+.container > .box .content {
     transition: all 0.1s ease-in-out;
     visibility: hidden;
     opacity: 0;
@@ -108,12 +119,12 @@ area[data-active="true"] {
         'img appl';
 }
 
-.box.open .content {
+.container > .box.open .content {
     visibility: visible;
     opacity: 1;
 }
 
-.box .content .applications {
+.container > .box .content .applications {
     display: flex;
     padding-left: 10px;
     font-size: 15px;
@@ -123,11 +134,11 @@ area[data-active="true"] {
     text-align: left;
 }
 
-.box .content img {
+.container > .box .content img {
     grid-area: img;
 }
 
-.box .close {
+.container > .box .close {
     position: absolute;
     right: 5px;
     top: 5px;
@@ -138,12 +149,12 @@ area[data-active="true"] {
     opacity: 0;
 }
 
-.box.open .close {
+.container > .box.open .close {
     visibility: visible;
     opacity: 1;
 }
 
-.box:not(.open) .title {
+.container > .box:not(.open) .title {
     position: relative;
     top: 70px;
     background: white;
@@ -167,6 +178,54 @@ area[data-active="true"] {
 
     .container {
         margin-top: 30px;
+    }
+
+    .container .container-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 0px;
+    }
+
+    .container .container-mobile .box {
+        border-bottom: 1px solid #f99602;
+        padding: 10px 15px;
+    }
+
+    .container .container-mobile .box .wrap-title {
+        display: flex;
+        gap: 10px;
+    }
+
+    .container .container-mobile .box .wrap-title span.index {
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .container .container-mobile .box .content {
+        transition: all 0.1s ease-in-out;
+        visibility: hidden;
+        opacity: 0;
+        display: grid;
+        grid-template-areas:
+            'title title'
+            'img appl';
+    }
+
+    .container .container-mobile .box:not(.open) .content {
+        height: 0;
+    }
+
+    .container .container-mobile .box.open .content {
+        visibility: visible;
+        opacity: 1;
+        height: auto;
+        margin-top: 10px;
+    }
+
+    .container .container-mobile .box .applications span {
+        text-align: left;
+        display: block;
+        padding-left: 10px;
     }
 
 }
