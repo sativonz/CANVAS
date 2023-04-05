@@ -34,9 +34,13 @@ area[data-active="true"] {
 .box {
     width: 100%;
     max-width: 280px;
-    background: white;
-    background: #ccc;
+    background: transparent;
     padding: 10px 15px;
+    min-height: 165px;
+}
+
+.box.open {
+    background: #ccc;
 }
 
 .box .title {
@@ -46,16 +50,24 @@ area[data-active="true"] {
     background-color: transparent;
     grid-area: title;
     font-weight: bold;
-    width: calc(100% - 25px);
     margin-bottom: 10px;
     text-align: left;
+    display: block;
 }
 
 .box .content {
+    transition: all 0.5s ease-in-out;
+    visibility: hidden;
+    opacity: 0;
     display: grid;
     grid-template-areas:
         'title title'
         'img appl';
+}
+
+.box.open .content {
+    visibility: visible;
+    opacity: 1;
 }
 
 .box .content .applications {
@@ -79,7 +91,22 @@ area[data-active="true"] {
     cursor: pointer;
     background-color: transparent;
     border: none;
+    visibility: hidden;
+    opacity: 0;
 }
 
-/****/
+.box.open .close {
+    visibility: visible;
+    opacity: 1;
+}
+
+.box:not(.open) .title {
+    position: relative;
+    top: 70px;
+    background: white;
+    padding-left: 25px;
+    margin-left: -25px;
+    padding-bottom: 15px;
+}
+
 

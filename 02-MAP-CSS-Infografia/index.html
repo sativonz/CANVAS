@@ -44,7 +44,7 @@
         data-title="INDUCTION HEATING FOR WELDED TUBE" 
         data-index="3"
         data-img="induction-welded.png" 
-        data-applications=""
+        data-applications="Seam welding<br>Seam annealing<br>Hardening"
         onclick="mostrarLineaYCaja(event, this, true)" title="INDUCTION HEATING FOR WELDED TUBE" 
         coords="629,134,24"
         shape="circle">
@@ -53,7 +53,7 @@
         data-title="INDUCTION HEATING FOR SEAMLESS TUBE" 
         data-index="4"
         data-img="induction-seamless.png" 
-        data-applications=""
+        data-applications="Swagging preheating Hardening / Tempering Drying for coating Warming for coating"
         onclick="mostrarLineaYCaja(event, this, true)" title="INDUCTION HEATING FOR SEAMLESS TUBE" 
         coords="460,278,26"
         shape="circle">
@@ -62,7 +62,7 @@
         data-title="INDUCTION HEATING FOR SUCKER RODS" 
         data-index="5"
         data-img="induction-welded.png" 
-        data-applications=""
+        data-applications="Induction preheating for head forging<br><br>Induction hardening"
         onclick="mostrarLineaYCaja(event, this, true)" title="INDUCTION HEATING FOR SUCKER RODS" 
         coords="454,338,22" 
         shape="circle">
@@ -72,8 +72,9 @@
 
 
   <script>
-    let container = document.querySelector(".container");
-    let imgElement = document.querySelector("img");
+    let container = document.querySelector(".container"),
+      imgElement = document.querySelector("img"),
+      areas = document.querySelectorAll("map area").length;
 
     function getAreaCenterCoords(area) {
       let coordsStrArray = area.coords.split(",");
@@ -193,8 +194,8 @@
       } else {
         let caja = document.createElement('div');
         caja.innerHTML = `
+        <span class='title'>${area.dataset.title}</span>
           <div class='content'>
-            <span class='title'>${area.dataset.title}</span>
             <img src='${area.dataset.img}' />
             <div class='applications'>
               <span>${area.dataset.applications}</span>
@@ -202,6 +203,7 @@
           </div>`;
         caja.style.position = 'absolute';
         caja.classList.add("pos-" + area.dataset.index, "box");
+        caja.setAttribute("data-index", area.dataset.index);
         let canvas = document.getElementById('canvas');
         canvas.width = container.offsetWidth;
         canvas.height = container.offsetHeight;
@@ -234,12 +236,28 @@
         container.appendChild(caja);
 
         if (usarTopIzquierda) {
-          ultimaCajaTopIzquierda += caja.offsetHeight + 100;
+          ultimaCajaTopIzquierda += caja.offsetHeight + 70;
         } else {
-          ultimaCajaTopDerecha += caja.offsetHeight + 150;
+          ultimaCajaTopDerecha += caja.offsetHeight + 70;
         }
       }
     }
+
+    setTimeout(()=>{
+      let areaToShow = document.querySelectorAll("[data-active='false']");
+      let boxes = document.querySelectorAll(".box");
+
+      areaToShow.forEach(area => {
+        area.addEventListener("click", e => {
+          let index = area.dataset.index;
+
+          boxes[index - 1].classList.add("open");
+
+        })
+      });
+    
+    }, 500 * areas)
+    
   </script>
 </body>
 
