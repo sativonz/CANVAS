@@ -22,13 +22,18 @@
       <span class="show">Ver todos</span>
       <span class="hide">Ocultar todos</span>
     </button>
-    <img src="img-maped.png" usemap="#mapa">
+    <!--<img src="img/img-maped.png" usemap="#mapa">-->
+    <picture>
+      <source srcset="img/img-maped-mob.png"
+              media="(max-width: 768px)">
+      <img src="img/img-maped.png" usemap="#mapa">
+    </picture>
     <canvas id="canvas" style="position:absolute; top:0; left:0;"></canvas>
     <map name="mapa">
       <area data-active="true" data-blocked="false"
         data-title="INDUCTION HEATING FOR DRILLING TUBES" 
         data-index="1" 
-        data-img="induction-drilling.png" 
+        data-img="img/induction-drilling.png" 
         data-applications="Induction hardening Induction tempering Innovation Rotating inductor makes more compact the solution"
         onclick="mostrarLineaYCaja(event, this, true)" title="INDUCTION HEATING FOR DRILLING TUBES" 
         coords="392,159,23"
@@ -37,8 +42,8 @@
       <area data-active="true" data-blocked="false" 
         data-title="INDUCTION HEATING FOR MOORING CHAINS" 
         data-index="2"
-        data-img="induction-mooring.png" 
-        data-applications="Efficient continuous Induction heating for bar forging<br><br>Chain links heating"
+        data-img="img/induction-mooring.png" 
+        data-applications="Efficient continuous Induction heating for bar forging<br>Chain links heating"
         onclick="mostrarLineaYCaja(event, this, true)" title="INDUCTION HEATING FOR MOORING CHAINS" 
         coords="291,261,25"
         shape="circle">
@@ -46,7 +51,7 @@
       <area data-active="true" data-blocked="false" 
         data-title="INDUCTION HEATING FOR WELDED TUBE" 
         data-index="3"
-        data-img="induction-welded.png" 
+        data-img="img/induction-welded.png" 
         data-applications="Seam welding<br>Seam annealing<br>Hardening"
         onclick="mostrarLineaYCaja(event, this, true)" title="INDUCTION HEATING FOR WELDED TUBE" 
         coords="629,134,24"
@@ -55,7 +60,7 @@
       <area data-active="true" data-blocked="false" 
         data-title="INDUCTION HEATING FOR SEAMLESS TUBE" 
         data-index="4"
-        data-img="induction-seamless.png" 
+        data-img="img/induction-seamless.png" 
         data-applications="Swagging preheating Hardening / Tempering Drying for coating Warming for coating"
         onclick="mostrarLineaYCaja(event, this, true)" title="INDUCTION HEATING FOR SEAMLESS TUBE" 
         coords="460,278,26"
@@ -64,8 +69,8 @@
       <area data-active="true" data-blocked="false" 
         data-title="INDUCTION HEATING FOR SUCKER RODS" 
         data-index="5"
-        data-img="induction-welded.png" 
-        data-applications="Induction preheating for head forging<br><br>Induction hardening"
+        data-img="img/induction-welded.png" 
+        data-applications="Induction preheating for head forging<br>Induction hardening"
         onclick="mostrarLineaYCaja(event, this, true)" title="INDUCTION HEATING FOR SUCKER RODS" 
         coords="454,338,22" 
         shape="circle">
@@ -78,7 +83,9 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="js/jquery.rwdImageMaps.min.js"></script>
 <script>
-    $(document).ready(function(e) {
+
+if (window.matchMedia("(min-width: 768px)").matches) {
+  $(document).ready(function(e) {
       $('img[usemap]').rwdImageMaps();
   });
 
@@ -276,21 +283,23 @@
   function showBtn(boxes) {
     let btnShowAll = document.querySelector("button.showAll");
     btnShowAll.classList.add("open");
-    btnShowAll.addEventListener("click", e=> {
-    boxes.forEach(box => {
-      if(box.classList.contains("open")){
-        box.classList.remove("open");
-        btnShowAll.classList.remove("show");
-      } else {
-        box.classList.add("open");
-        btnShowAll.classList.add("show");
+    btnShowAll.addEventListener("click", e => {
+      if(e.target.matches(".show")){
+        boxes.forEach(box => {
+          box.classList.add("open");
+          btnShowAll.classList.add("show");
+        });
       }
-    });
-  })
+      if(e.target.matches(".hide")){
+        boxes.forEach(box => {
+          box.classList.remove("open");
+            btnShowAll.classList.remove("show");
+        });
+      }
+    })
   }
-
-  
-  
+}
+    
   </script>
 </body>
 

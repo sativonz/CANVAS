@@ -46,7 +46,7 @@ area[data-active="true"] {
     font-size: 16px;
     font-family: sans-serif;
     cursor: pointer;
-    font-weight: bold;
+    font-weight: 500;
     visibility: hidden;
     opacity: 0;
     transition: all 0.3s ease-in-out;
@@ -79,7 +79,7 @@ area[data-active="true"] {
     max-width: 280px;
     background: transparent;
     padding: 10px 15px;
-    min-height: 165px;
+    min-height: 125px;
 }
 
 .box.open {
@@ -154,4 +154,19 @@ area[data-active="true"] {
     border: 1px solid #f99602;
 }
 
+@media (max-width: 900px) {
 
+    .container button.showAll {
+        position: relative;
+        top: -140px;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .container {
+        margin-top: 30px;
+    }
+
+}
