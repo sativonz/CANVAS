@@ -38,6 +38,40 @@ area[data-active="true"] {
     height: auto;
 }
 
+.container button.showAll {
+    border: 1px solid #f99602;
+    background: none;
+    padding: 0 20px;
+    height: 40px;
+    font-size: 16px;
+    font-family: sans-serif;
+    cursor: pointer;
+    font-weight: bold;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    width: 150px;
+}
+
+.container button.showAll.open {
+    visibility: visible;
+    opacity: 1;
+}
+
+.container button.showAll:hover {
+    background: #f99602;
+    color: white;
+}
+
+.container button.showAll.show .show,
+.container button.showAll:not(.show) .hide {
+    display: none;
+}
+
+.container button.showAll.show .hide {
+    display: block;
+}
+
 /**** BOX *****/
 
 .box {
@@ -117,7 +151,7 @@ area[data-active="true"] {
     margin-left: -25px;
     padding-bottom: 10px;
     padding-top: 10px;
-    border: 1px solid orange;
+    border: 1px solid #f99602;
 }
 
 

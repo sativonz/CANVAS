@@ -18,6 +18,10 @@
   <area target="" alt="" title="" href="" coords="629,137,26" shape="circle">
 
   <div class="container">
+    <button class="showAll">
+      <span class="show">Ver todos</span>
+      <span class="hide">Ocultar todos</span>
+    </button>
     <img src="img-maped.png" usemap="#mapa">
     <canvas id="canvas" style="position:absolute; top:0; left:0;"></canvas>
     <map name="mapa">
@@ -255,19 +259,37 @@
   }
 
   setTimeout(()=>{
-    let areaToShow = document.querySelectorAll("[data-active='false']");
-    let boxes = document.querySelectorAll(".box");
+    let areaToShow = document.querySelectorAll("[data-active='false']"),
+      boxes = document.querySelectorAll(".box");
 
     areaToShow.forEach(area => {
       area.addEventListener("click", e => {
         let index = area.dataset.index;
-
         boxes[index - 1].classList.add("open");
-
       })
     });
+
+    showBtn(boxes);
   
-  }, 500 * areas)
+  }, 500 * areas);
+
+  function showBtn(boxes) {
+    let btnShowAll = document.querySelector("button.showAll");
+    btnShowAll.classList.add("open");
+    btnShowAll.addEventListener("click", e=> {
+    boxes.forEach(box => {
+      if(box.classList.contains("open")){
+        box.classList.remove("open");
+        btnShowAll.classList.remove("show");
+      } else {
+        box.classList.add("open");
+        btnShowAll.classList.add("show");
+      }
+    });
+  })
+  }
+
+  
   
   </script>
 </body>
