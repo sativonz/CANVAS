@@ -1,0 +1,82 @@
+:root {
+    --topMov: 10px;
+    --leftMov: 30px;
+    --rightMov: 30px;
+}
+
+canvas {
+    pointer-events: none;
+}
+
+.hidden {
+    display: none;
+}
+
+area {
+    cursor: pointer;
+}
+
+area[data-active="true"] {
+    pointer-events: none !important;
+}
+
+.container {
+    margin: 150px auto 0 auto;
+    width: 100%;
+    font-family: sans-serif;
+    max-width: 1400px;
+    position: relative;
+    text-align: center;
+}
+
+/**** BOX *****/
+
+.box {
+    width: 100%;
+    max-width: 280px;
+    background: white;
+    background: #ccc;
+    padding: 10px 15px;
+}
+
+.box .title {
+    font-size: 17px;
+    font-weight: bold;
+    width: calc(100% - 25px);
+    background-color: transparent;
+    grid-area: title;
+    font-weight: bold;
+    width: calc(100% - 25px);
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.box .content {
+    display: grid;
+    grid-template-areas:
+        'title title'
+        'img appl';
+}
+
+.box .content .applications {
+    display: flex;
+    padding-left: 10px;
+    font-size: 15px;
+    position: relative;
+    grid-area: appl;
+    top: -3px;
+}
+
+.box .content img {
+    grid-area: img;
+}
+
+
+/****/
+.container-text .close {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+}
+

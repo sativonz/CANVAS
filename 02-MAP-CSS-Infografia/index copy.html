@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <title>Document</title>
+</head>
+
+
+<body>
+  <div class="container">
+    <img src="img-to-mao.png" usemap="#mapa">
+    <canvas id="canvas" style="position:absolute; top:0; left:0;"></canvas>
+    <map name="mapa">
+      <area data-active="true" data-title="INDUCTION HEATING FOR DRILLING TUBES" 
+        data-index="1"
+        title="INDUCTION HEATING FOR DRILLING TUBES" coords="392,159,23" shape="circle"
+        onclick="mostrarLineaYCaja(event, this)">
+
+      <area data-active="true" data-title="INDUCTION HEATING FOR MOORING CHAINS" 
+        data-index="2"
+        title="INDUCTION HEATING FOR MOORING CHAINS" coords="291,261,25" shape="circle"
+        onclick="mostrarLineaYCaja(event, this)">
+
+      <area data-active="true" data-title="INDUCTION HEATING FOR SEAMLESS TUBE" 
+        data-index="3"
+        title="INDUCTION HEATING FOR SEAMLESS TUBE" coords="460,278,26" shape="circle"
+        onclick="mostrarLineaYCaja(event, this)">
+
+      <area data-active="true" data-title="INDUCTION HEATING FOR SUCKER RODS" 
+        data-index="4"
+        title="INDUCTION HEATING FOR SUCKER RODS" coords="455,338,24" shape="circle"
+        onclick="mostrarLineaYCaja(event, this)">
+
+      <area data-active="true" data-title="INDUCTION HEATING FOR WELDED TUBE" 
+        data-index="5"
+        title="INDUCTION HEATING FOR WELDED TUBE" coords="629,134,24" shape="circle"
+        onclick="mostrarLineaYCaja(event, this)">
+    </map>
+  </div>
+
+
+  <script>
+
+
+
+
+
+    let ultimaCajaTop = 100,
+      lineas = [],
+      cajas = {},
+      ultimaCajaTopIzquierda = 100,
+      ultimaCajaTopDerecha = 100;
+    container = document.querySelector(".container");
+
+
+    function createCloseButton(caja, area, index) {
+      let closeButton = document.createElement('button');
+      closeButton.innerHTML = 'x';
+      closeButton.style.position = 'absolute';
+      closeButton.style.top = '0';
+      closeButton.style.right = '0';
+      closeButton.onclick = function () {
+        // Ocultar la caja
+        caja.style.display = "none";
+        // Eliminar la línea
+        cajas[index].linea = null;
+        // Redibujar las líneas
+        redrawLines();
+        // Reestablecer la propiedad active del área
+        area.dataset.active = 'true';
+      };
+      caja.appendChild(closeButton);
+    }
+
+    function redrawLines() {
+      let ctx = document.getElementById('canvas').getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
+      for (let index in cajas) {
+        if (cajas[index].linea) {
+          ctx.beginPath();
+          ctx.moveTo(cajas[index].linea.inicioX, cajas[index].linea.inicioY);
+          ctx.lineTo(cajas[index].linea.finalX, cajas[index].linea.finalY);
+          ctx.stroke();
+        }
+      }
+    }
+
+
+    function mostrarLineaYCaja(event, area) {
+      if (area.dataset.active === 'false') return;
+      area.dataset.active = 'false';
+
+      let containerRect = container.getBoundingClientRect();
+      let offsetX = event.clientX - containerRect.left;
+      let offsetY = event.clientY - containerRect.top;
+
+      let test = container.querySelector(".pos-" + area.dataset.index);
+
+      if (test) {
+        test.style.display = "block";
+        area.dataset.active = 'true';
+
+        let finalX;
+        if (offsetX < container.offsetWidth / 2) {
+          finalX = 0;
+        } else {
+          finalX = container.offsetWidth - 200;
+        }
+
+        // Actualizar la información de la línea en cajas
+        cajas[area.dataset.index].linea = {
+          inicioX: offsetX,
+          inicioY: offsetY,
+          finalX: finalX,
+          finalY: cajas[area.dataset.index].elemento.offsetTop,
+        };
+        redrawLines();
+      } else {
+        let caja = document.createElement('div');
+        caja.innerHTML = `<span class='title'>${area.dataset.title}</span>`;
+        caja.style.position = 'absolute';
+        caja.classList.add("pos-" + area.dataset.index);
+        let canvas = document.getElementById('canvas');
+        canvas.width = container.offsetWidth;
+        canvas.height = container.offsetHeight;
+
+        let finalX;
+        let usarTopIzquierda;
+        if (offsetX < container.offsetWidth / 2) {
+          finalX = 0;
+          usarTopIzquierda = true;
+        } else {
+          finalX = container.offsetWidth - 200;
+          usarTopIzquierda = false;
+        }
+
+        let topActual = usarTopIzquierda ? ultimaCajaTopIzquierda : ultimaCajaTopDerecha;
+
+        cajas[area.dataset.index] = {
+          elemento: caja,
+          linea: { inicioX: offsetX, inicioY: offsetY, finalX: finalX, finalY: topActual },
+        };
+
+        createCloseButton(caja, area, area.dataset.index);
+        redrawLines();
+
+        caja.style.left = finalX + 'px';
+        caja.style.top = topActual + 'px';
+
+        container.appendChild(caja);
+
+        if (usarTopIzquierda) {
+          ultimaCajaTopIzquierda += caja.offsetHeight + 100;
+        } else {
+          ultimaCajaTopDerecha += caja.offsetHeight + 100;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
