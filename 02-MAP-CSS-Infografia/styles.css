@@ -42,7 +42,6 @@ area[data-active="true"] {
 .container button.showAll {
     border: 1px solid #f99602;
     background: none;
-    padding: 0 20px;
     height: 40px;
     font-size: 16px;
     font-family: sans-serif;
@@ -52,6 +51,20 @@ area[data-active="true"] {
     opacity: 0;
     transition: all 0.3s ease-in-out;
     width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.container button.showAll span.show,
+.container button.showAll span.hide {
+    display: block;
+    width: 100%;
+    height: 100%;
+    line-height: 35px;
+    padding: 0 20px;
 }
 
 .container button.showAll.open {
