@@ -202,6 +202,7 @@ area[data-active="true"] {
     .container .container-mobile .box {
         border-bottom: 1px solid #f99602;
         padding: 10px 15px;
+        cursor: pointer;
     }
 
     .container .container-mobile .box .wrap-title {
